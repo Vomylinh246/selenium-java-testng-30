@@ -16,7 +16,7 @@ import org.testng.annotations.Test;
 public class topic01_test {
 
     WebDriver driver;
-    WatchKey watch;
+
     @Test
     public void TC_01_RunOnFirefox() {
         driver = new FirefoxDriver();
