@@ -28,7 +28,7 @@ public class topic01_test {
         driver.get("https://www.facebook.com/");
         driver.quit();
     }
-
+//command
     @Test
     public void TC_01_RunOnEdge() {
         driver = new EdgeDriver();
