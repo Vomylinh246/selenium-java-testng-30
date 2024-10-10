@@ -1,13 +1,7 @@
 package webdriver;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -16,7 +10,7 @@ import org.testng.annotations.Test;
 import java.time.Duration;
 import java.util.Random;
 
-public class topic13__Java_Executor {
+public class topic13__Javascript_Executor {
 
     WebDriver driver;
     JavascriptExecutor jsExecutor;
@@ -108,7 +102,8 @@ public class topic13__Java_Executor {
         jsExecutor.executeScript("arguments[0].setAttribute('value', arguments[1])", emailField, "Linh Vo");
         jsExecutor.executeScript("arguments[0].click();", driver.findElement(By.xpath("//button[@data-qa-id='login_button']")));
         Assert.assertEquals(jsExecutor.executeScript("return arguments[0].validationMessage;", emailField), "Please include an '@' in the email address. 'Linh Vo' is missing an '@'.");
-        driver.close();
+
+        driver.switchTo().newWindow(WindowType.TAB);
 
         // Sieuthimaymocthietbi
         jsExecutor.executeScript("window.location = 'https://sieuthimaymocthietbi.com/account/register'");
