@@ -2,9 +2,7 @@ package webdriver;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -14,7 +12,7 @@ import org.testng.annotations.Test;
 
 import java.time.Duration;
 
-public class topic15_Selenium_WebDriver_Wait {
+public class topic15_Explicit_Wait {
 
     WebDriver driver;
     WebDriverWait explicitWait;
@@ -22,25 +20,10 @@ public class topic15_Selenium_WebDriver_Wait {
     @BeforeClass
     public void initialBrowser() {
         driver = new EdgeDriver();
-        explicitWait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        explicitWait = new WebDriverWait(driver, Duration.ofSeconds(5));
     }
 
-    @Test
-    public void TC_02_Implicit_Wait() {
-        driver.get("https://automationfc.github.io/dynamic-loading/");
-        driver.findElement(By.xpath("//div[@id='start']/button")).click();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        Assert.assertEquals(driver.findElement(By.xpath("//div[@id='finish']")).getText(), "Hello World!");
-    }
-
-    @Test
-    public void TC_03_Static_Wait() throws InterruptedException {
-        driver.get("https://automationfc.github.io/dynamic-loading/");
-        driver.findElement(By.xpath("//div[@id='start']/button")).click();
-        Thread.sleep(5000);
-        Assert.assertEquals(driver.findElement(By.xpath("//div[@id='finish']")).getText(), "Hello World!");
-    }
-//    @Test
+    //    @Test
 //    public void TC_04_Explicit_Wait(){
 //        //Wait cho element khong hien thu, khong con trong HTML (truoc do co ton tai)
 //        explicitWait.until(ExpectedConditions.stalenessOf(driver.findElement(By.xpath(""))));
@@ -102,6 +85,36 @@ public class topic15_Selenium_WebDriver_Wait {
 //        //Wiat cho 1 element hay bi change/ refresh lai/ update lai
 //        explicitWait.until(ExpectedConditions.refreshed(ExpectedConditions.numberOfWindowsToBe(3)));
 //    }
+
+    @Test
+    public void TC_04_Explicit_Wait() {
+        driver.get("https://automationfc.github.io/dynamic-loading/");
+        driver.findElement(By.xpath("//button[text()='Start']")).click();
+        explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@id='loading']")));
+        Assert.assertEquals(driver.findElement(By.xpath("//div[@id='finish']")).getText(), "Hello World!");
+    }
+
+    @Test
+    public void TC_05_Explicit_Wait() {
+        driver.get("https://automationfc.github.io/dynamic-loading/");
+        driver.findElement(By.xpath("//button[text()='Start']")).click();
+        explicitWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='finish']")));
+        Assert.assertEquals(driver.findElement(By.xpath("//div[@id='finish']")).getText(), "Hello World!");
+    }
+
+    @Test
+    public void TC_06_Explicit_Wait(){
+        driver.get("https://demos.telerik.com/aspnet-ajax/ajaxloadingpanel/functionality/explicit-show-hide/defaultcs.aspx");
+        //Step 2
+        explicitWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='ctl00_ContentPlaceholder1_Panel1']")));
+        Assert.assertTrue(driver.findElement(By.xpath("//div[@id='ctl00_ContentPlaceholder1_Panel1']")).isDisplayed());
+        //Step 3:
+        explicitWait.until(ExpectedConditions.textToBe(By.xpath("//span[@id='ctl00_ContentPlaceholder1_Label1']"), "No Selected Dates to display."));
+        Assert.assertEquals(driver.findElement(By.xpath("//span[@id='ctl00_ContentPlaceholder1_Label1']")).getText(),"No Selected Dates to display.");
+        //Step 4:
+        explicitWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//td/a[text()=13]"))).click();
+
+    }
 
     @AfterClass
     public void destroyBrowser() {
