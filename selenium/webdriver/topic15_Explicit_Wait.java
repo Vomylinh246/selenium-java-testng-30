@@ -2,6 +2,7 @@ package webdriver;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -10,12 +11,18 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.time.Duration;
 
 public class topic15_Explicit_Wait {
 
     WebDriver driver;
     WebDriverWait explicitWait;
+    String uploadFolderPath = System.getProperty("user.dir") + File.separator + "uploadFiles" + File.separator;
+
+    String jennie = "Jennie.jpg";
+    String jenniePath = uploadFolderPath + jennie;
+
 
     @BeforeClass
     public void initialBrowser() {
@@ -103,17 +110,37 @@ public class topic15_Explicit_Wait {
     }
 
     @Test
-    public void TC_06_Explicit_Wait(){
+    public void TC_06_Explicit_Wait() {
         driver.get("https://demos.telerik.com/aspnet-ajax/ajaxloadingpanel/functionality/explicit-show-hide/defaultcs.aspx");
-        //Step 2
-        explicitWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='ctl00_ContentPlaceholder1_Panel1']")));
-        Assert.assertTrue(driver.findElement(By.xpath("//div[@id='ctl00_ContentPlaceholder1_Panel1']")).isDisplayed());
-        //Step 3:
-        explicitWait.until(ExpectedConditions.textToBe(By.xpath("//span[@id='ctl00_ContentPlaceholder1_Label1']"), "No Selected Dates to display."));
-        Assert.assertEquals(driver.findElement(By.xpath("//span[@id='ctl00_ContentPlaceholder1_Label1']")).getText(),"No Selected Dates to display.");
-        //Step 4:
-        explicitWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//td/a[text()=13]"))).click();
+        //Step 2: Wait va verify Date time duoc hien thi
+        Assert.assertTrue(explicitWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='ctl00_ContentPlaceholder1_Panel1']"))).isDisplayed());
+        //Step 3: Wait and verify text khi chua select date
+        Assert.assertTrue(explicitWait.until(ExpectedConditions.textToBe(By.xpath("//span[@id='ctl00_ContentPlaceholder1_Label1']"), "No Selected Dates to display.")));
+        //Step 4: Wait and click ngay thang
+        explicitWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//td/a[text()=15]"))).click();
+        //Step 5: Wait cho den khi ajax loading icon invisible and verify
+        Assert.assertTrue(explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@id,'RadCalendar1')]/div[@class='raDiv']"))));
+        // Step 6: Wait den khi ngay 15 duoc selected
+        Assert.assertTrue(explicitWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//td/a[text()=15]"))).isDisplayed());
+        // Step 7: Wait and verify text hien thi
+        Assert.assertTrue(explicitWait.until(ExpectedConditions.textToBe(By.xpath("//span[@id='ctl00_ContentPlaceholder1_Label1']"), "Tuesday, October 15, 2024")));
+    }
 
+    @Test
+    public void TC_07_Explicit_Wait(){
+        driver.get("https://gofile.io/?t=uploadFiles");
+        //Wait loading icon
+        Assert.assertTrue(explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='spinner-border']"))));
+        //Wait and click Update file
+        explicitWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Upload Files']"))).click();
+        // Add files
+        driver.findElement(By.xpath("//button[text()='Add files']")).sendKeys(jenniePath);
+        // Wait loading icon
+        Assert.assertTrue(explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='row mainUploadInitInfo']"))));
+        //Wait loading bar
+        Assert.assertTrue(explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//span[contains(@class,'justify-content-center')]"))));
+
+        explicitWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[contains(@class,'mainUploadSuccessLink')]//a[@class='ajaxLink']"))).click();
     }
 
     @AfterClass
