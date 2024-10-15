@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -13,6 +14,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.List;
 
 public class topic15_Explicit_Wait {
 
@@ -27,7 +29,7 @@ public class topic15_Explicit_Wait {
     @BeforeClass
     public void initialBrowser() {
         driver = new EdgeDriver();
-        explicitWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        explicitWait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     //    @Test
@@ -127,19 +129,20 @@ public class topic15_Explicit_Wait {
     }
 
     @Test
-    public void TC_07_Explicit_Wait(){
+    public void TC_07_Explicit_Wait() {
         driver.get("https://gofile.io/?t=uploadFiles");
         //Wait loading icon
         Assert.assertTrue(explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='spinner-border']"))));
         //Wait and click Update file
         explicitWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//button[text()='Upload Files']"))).click();
-        // Add files
-        driver.findElement(By.xpath("//button[text()='Add files']")).sendKeys(jenniePath);
-        // Wait loading icon
+        // Wait cho den khi  Add files xuat hien
+        explicitWait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//input[@type='file']"))).sendKeys(jenniePath);
+
+        //Wait loading icon
         Assert.assertTrue(explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[@class='row mainUploadInitInfo']"))));
         //Wait loading bar
         Assert.assertTrue(explicitWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//span[contains(@class,'justify-content-center')]"))));
-
+        //Wait cho den khi link hien ra
         explicitWait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[contains(@class,'mainUploadSuccessLink')]//a[@class='ajaxLink']"))).click();
     }
 
